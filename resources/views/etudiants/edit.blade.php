@@ -1,74 +1,65 @@
-<!-- resources/views/etudiants/edit.blade.php -->
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h3>Modifier les informations de l'étudiant</h3>
-        </div>
-
-        <div class="card-body">
-            <form action="{{ route('etudiants.update', $etudiant->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label for="nom" class="form-label">Nom</label>
-                            <input type="text" class="form-control @error('nom') is-invalid @enderror" id="nom" name="nom" value="{{ old('nom', $etudiant->nom) }}" required>
-                            @error('nom')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label for="prenom" class="form-label">Prénom</label>
-                            <input type="text" class="form-control @error('prenom') is-invalid @enderror" id="prenom" name="prenom" value="{{ old('prenom', $etudiant->prenom) }}" required>
-                            @error('prenom')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $etudiant->email) }}" required>
-                    @error('email')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="date_naissance" class="form-label">Date de naissance</label>
-                    <input type="date" class="form-control @error('date_naissance') is-invalid @enderror" id="date_naissance" name="date_naissance" value="{{ old('date_naissance', $etudiant->date_naissance) }}" required>
-                    @error('date_naissance')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="form-group mb-4">
-                    <label for="adresse" class="form-label">Adresse</label>
-                    <textarea class="form-control @error('adresse') is-invalid @enderror" id="adresse" name="adresse" rows="3" required>{{ old('adresse', $etudiant->adresse) }}</textarea>
-                    @error('adresse')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="d-flex justify-content-between">
-                    <a href="{{ route('etudiants.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-1"></i> Retour
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-1"></i> Mettre à jour
-                    </button>
-                </div>
-            </form>
-        </div>
+<div class="bg-white shadow-xl rounded-lg overflow-hidden">
+    <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
+        <h3 class="text-2xl leading-6 font-semibold text-gray-900">
+            <i class="fas fa-edit fa-fw mr-2 text-indigo-500"></i>Modifier les informations de l'étudiant
+        </h3>
+        <p class="mt-1 text-sm text-gray-500">Mettez à jour les détails de {{ $etudiant->prenom }} {{ $etudiant->nom }}.</p>
     </div>
+
+    <form action="{{ route('etudiants.update', $etudiant->id) }}" method="POST" class="p-6 space-y-6">
+        @csrf
+        @method('PUT')
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+                <input type="text" name="nom" id="nom" value="{{ old('nom', $etudiant->nom) }}" required
+                       class="mt-1 block w-full px-3 py-2 border @error('nom') border-red-500 @else border-gray-300 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                @error('nom') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+            </div>
+
+            <div>
+                <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom</label>
+                <input type="text" name="prenom" id="prenom" value="{{ old('prenom', $etudiant->prenom) }}" required
+                       class="mt-1 block w-full px-3 py-2 border @error('prenom') border-red-500 @else border-gray-300 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                @error('prenom') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+            </div>
+        </div>
+
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input type="email" name="email" id="email" value="{{ old('email', $etudiant->email) }}" required
+                   class="mt-1 block w-full px-3 py-2 border @error('email') border-red-500 @else border-gray-300 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            @error('email') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+        </div>
+
+        <div>
+            <label for="date_naissance" class="block text-sm font-medium text-gray-700">Date de naissance</label>
+            <input type="date" name="date_naissance" id="date_naissance" value="{{ old('date_naissance', $etudiant->date_naissance) }}" required
+                   class="mt-1 block w-full px-3 py-2 border @error('date_naissance') border-red-500 @else border-gray-300 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            @error('date_naissance') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+        </div>
+
+        <div>
+            <label for="adresse" class="block text-sm font-medium text-gray-700">Adresse</label>
+            <textarea name="adresse" id="adresse" rows="3" required
+                      class="mt-1 block w-full px-3 py-2 border @error('adresse') border-red-500 @else border-gray-300 @enderror rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('adresse', $etudiant->adresse) }}</textarea>
+            @error('adresse') <p class="mt-1 text-xs text-red-500">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="pt-5">
+            <div class="flex justify-end space-x-3">
+                <a href="{{ route('etudiants.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour
+                </a>
+                <button type="submit" class="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <i class="fas fa-save mr-2"></i> Mettre à jour
+                </button>
+            </div>
+        </div>
+    </form>
 </div>
 @endsection
