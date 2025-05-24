@@ -9,39 +9,71 @@
             </h3>
             <p class="mt-1 text-sm text-gray-500">Gérez les informations des étudiants inscrits.</p>
         </div>
-        <div class="mt-3 sm:mt-0 sm:ml-4">
-             <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-indigo-100 text-indigo-700 mr-3">
-                <i class="fas fa-graduation-cap mr-2"></i> {{ $count }} étudiant(s) inscrits
+        <div class="mt-3 sm:mt-0 sm:ml-4 flex items-center space-x-3">
+             <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-indigo-100 text-indigo-700">
+                <i class="fas fa-graduation-cap mr-2"></i> {{ $count }} étudiant(s)
             </span>
+            {{-- Bouton Export PDF --}}
+            <a href="{{ route('etudiants.export.pdf', ['search' => request('search'), 'sort_by' => $sortBy, 'sort_direction' => $sortDirection]) }}" 
+               class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+               title="Télécharger la liste en PDF">
+                <i class="fas fa-file-pdf mr-2"></i> Exporter PDF
+            </a>
             <a href="{{ route('etudiants.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <i class="fas fa-plus-circle mr-2"></i> Ajouter un étudiant
+                <i class="fas fa-plus-circle mr-2"></i> Ajouter
             </a>
         </div>
     </div>
 
     <div class="p-6">
         <form action="{{ route('etudiants.index') }}" method="GET" class="mb-6 flex items-center">
+            {{-- Garder les paramètres de tri lors de la recherche --}}
+            <input type="hidden" name="sort_by" value="{{ $sortBy }}">
+            <input type="hidden" name="sort_direction" value="{{ $sortDirection }}">
+            
             <input type="text" name="search" class="block w-full sm:w-1/2 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Rechercher par nom, prénom, email..." value="{{ request('search') }}">
             <button type="submit" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <i class="fas fa-search"></i>
             </button>
             @if(request('search'))
-                <a href="{{ route('etudiants.index') }}" class="ml-2 inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" title="Effacer la recherche">
+                <a href="{{ route('etudiants.index', ['sort_by' => $sortBy, 'sort_direction' => $sortDirection]) }}" class="ml-2 inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" title="Effacer la recherche">
                     <i class="fas fa-times"></i>
                 </a>
             @endif
         </form>
 
         @if($etudiants->count() > 0)
-            <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+            <div class="align-middle inline-block min-w-full shadow overflow-x-auto sm:rounded-lg border-b border-gray-200">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prénom</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date de naissance</th>
+                            @php
+                                // Helper function pour les liens de tri
+                                function sortableLink($column, $label, $currentSortBy, $currentSortDirection, $request) {
+                                    $newDirection = ($currentSortBy == $column && $currentSortDirection == 'asc') ? 'desc' : 'asc';
+                                    $icon = '';
+                                    if ($currentSortBy == $column) {
+                                        $icon = $currentSortDirection == 'asc' ? '<i class="fas fa-sort-up ml-1"></i>' : '<i class="fas fa-sort-down ml-1"></i>';
+                                    }
+                                    $url = route('etudiants.index', array_merge($request->query(), ['sort_by' => $column, 'sort_direction' => $newDirection]));
+                                    return '<a href="'.$url.'" class="group inline-flex items-center">'.$label. $icon . '</a>';
+                                }
+                            @endphp
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {!! sortableLink('id', 'ID', $sortBy, $sortDirection, request()) !!}
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {!! sortableLink('nom', 'Nom', $sortBy, $sortDirection, request()) !!}
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {!! sortableLink('prenom', 'Prénom', $sortBy, $sortDirection, request()) !!}
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {!! sortableLink('email', 'Email', $sortBy, $sortDirection, request()) !!}
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                {!! sortableLink('date_naissance', 'Date de naissance', $sortBy, $sortDirection, request()) !!}
+                            </th>
                             <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -60,10 +92,10 @@
                                     <a href="{{ route('etudiants.edit', $etudiant->id) }}" class="text-indigo-600 hover:text-indigo-900 transition-colors duration-150" title="Modifier">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form action="{{ route('etudiants.destroy', $etudiant->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet étudiant ? Cette action est irréversible.')">
+                                    <form action="{{ route('etudiants.destroy', $etudiant->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir mettre cet étudiant à la corbeille ?')"> {{-- Message modifié --}}
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900 transition-colors duration-150" title="Supprimer">
+                                        <button type="submit" class="text-red-600 hover:text-red-900 transition-colors duration-150" title="Mettre à la corbeille">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -75,7 +107,8 @@
             </div>
             
             <div class="mt-6">
-                {{ $etudiants->links() }} {{-- Tailwind pagination views need to be configured in AppServiceProvider for full styling --}}
+                {{-- $etudiants->links() --}} {{-- Laravel >9 --}}
+                {{ $etudiants->appends(request()->query())->links() }} {{-- Pour garder les params de tri/recherche --}}
             </div>
         @else
             <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md shadow-md">

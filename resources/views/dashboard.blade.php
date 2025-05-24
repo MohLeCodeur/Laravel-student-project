@@ -28,12 +28,49 @@
             <p class="text-gray-600">Vous êtes connecté en tant qu'administrateur.</p>
         </div>
 
+        {{-- Nouvelles cartes de statistiques --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-blue-100 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                        <i class="fas fa-users fa-2x text-white"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-blue-700 uppercase">Total Étudiants</p>
+                        <p class="text-2xl font-bold text-blue-900">{{ $totalEtudiants }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-green-100 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                        <i class="fas fa-user-clock fa-2x text-white"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-green-700 uppercase">Nouveaux (7 jours)</p>
+                        <p class="text-2xl font-bold text-green-900">{{ $etudiantsRecents }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-yellow-100 p-6 rounded-lg shadow hover:shadow-lg transition-shadow">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                        <i class="fas fa-birthday-cake fa-2x text-white"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-yellow-700 uppercase">Âge Moyen</p>
+                        <p class="text-2xl font-bold text-yellow-900">{{ $ageMoyen }} ans</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
                 <div class="p-6">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
-                            <i class="fas fa-users fa-2x text-white"></i>
+                            <i class="fas fa-list-alt fa-2x text-white"></i> {{-- Icône modifiée --}}
                         </div>
                         <div class="ml-4">
                             <h5 class="text-lg leading-6 font-medium text-gray-900">Gestion des étudiants</h5>
